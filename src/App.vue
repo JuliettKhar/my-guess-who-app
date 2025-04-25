@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {computed, ref, watch} from 'vue'
+import { computed, ref, watch } from 'vue'
 import CategorySelector from './components/CategorySelector.vue'
 import ChatWindow from './components/ChatWindow.vue'
 import QuickReplies from './components/QuickReplies.vue'
@@ -8,14 +8,14 @@ import matrixImg from '@/assets/movie.png'
 import realImg from '@/assets/real.png'
 import generalImg from '@/assets/general.png'
 
-const enCategories = ['Anime Character', 'Real Person', 'Movie Character'];
-const jpCategories = ['アニメキャラクター', '実在の人物', '映画のキャラクター'];
+const enCategories = ['Anime Character', 'Real Person', 'Movie Character']
+const jpCategories = ['アニメキャラクター', '実在の人物', '映画のキャラクター']
 const category = ref('')
 const lang = ref('en')
 const input = ref('')
 const messages = ref([])
 
-const categoriesByLang = computed(() => lang.value === 'en' ? enCategories : jpCategories)
+const categoriesByLang = computed(() => (lang.value === 'en' ? enCategories : jpCategories))
 const dynamicBg = computed(() => {
   switch (category.value) {
     case 1:
@@ -44,7 +44,8 @@ const systemPrompts: any = {
   }
 }
 
-const updateBg = () => document.documentElement.style.setProperty('--guess-bg-url', `url('${dynamicBg.value}')`)
+const updateBg = () =>
+  document.documentElement.style.setProperty('--guess-bg-url', `url('${dynamicBg.value}')`)
 
 const selectCategory = (c: number) => {
   category.value = c
@@ -67,9 +68,9 @@ const sendMessage = () => {
 }
 
 const scrollToMessage = () => {
-    setTimeout(() => {
+  setTimeout(() => {
     const currMessage = document.getElementById(`message-${messages.value.length - 1}`)
-    currMessage?.scrollIntoView({ behavior: 'smooth' });
+    currMessage?.scrollIntoView({ behavior: 'smooth' })
   }, 0)
 }
 
@@ -78,7 +79,7 @@ const fetchNextQuestion = async () => {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${import.meta.env.VITE_API_KEY}`
+      Authorization: `Bearer ${import.meta.env.VITE_API_KEY}`
     },
     body: JSON.stringify({
       model: 'gpt-4',
@@ -97,24 +98,30 @@ const reset = () => {
 }
 
 watch(category, () => {
-  updateBg();
+  updateBg()
 })
 </script>
 
 <template>
   <div class="guess-app">
     <div class="guess-app__header">
-      <h1 class="sm:text-sm md:text-3xl font-bold text-center text-indigo-700">{{lang === 'ja' ? '「だれでしょう？」': 'Guess Who?'}}</h1>
+      <h1 class="sm:text-sm md:text-3xl font-bold text-center text-indigo-700">
+        {{ lang === 'ja' ? '「だれでしょう？」' : 'Guess Who?' }}
+      </h1>
       <div class="flex justify-end">
-      <select v-if="!category" v-model="lang" class="border border-gray-300 rounded-xl px-2 py-2 text-sm text-gray-500">
-        <option value="en">🇬🇧 English</option>
-        <option value="ja">🇯🇵 日本語</option>
-      </select>
-    </div>
-    </div>
-    <div v-if="!category" class="guess-app__body" :style="!category ? 'flex-direction: row': ''">
-      <CategorySelector :categories="categoriesByLang" :lang="lang" @select="selectCategory" />
+        <select
+          v-if="!category"
+          v-model="lang"
+          class="border border-gray-300 rounded-xl px-2 py-2 text-sm text-gray-500"
+        >
+          <option value="en">🇬🇧 English</option>
+          <option value="ja">🇯🇵 日本語</option>
+        </select>
       </div>
+    </div>
+    <div v-if="!category" class="guess-app__body" :style="!category ? 'flex-direction: row' : ''">
+      <CategorySelector :categories="categoriesByLang" :lang="lang" @select="selectCategory" />
+    </div>
     <div v-else class="guess-app__body">
       <ChatWindow :messages="messages" />
       <QuickReplies :lang="lang" @reply="quickReply" />
@@ -123,11 +130,14 @@ watch(category, () => {
           v-model="input"
           @keydown.enter="sendMessage"
           :placeholder="lang === 'ja' ? '答えを入力してください…' : 'Type your answer...'"
-          class="flex-1 border border-gray-300 rounded-xl px-4 py-2" />
-        <button @click="sendMessage" class="bg-indigo-500 text-white rounded-xl px-4">{{lang === 'ja' ? '送信' : 'Send'}}</button>
+          class="flex-1 border border-gray-300 rounded-xl px-4 py-2"
+        />
+        <button @click="sendMessage" class="bg-indigo-500 text-white rounded-xl px-4">
+          {{ lang === 'ja' ? '送信' : 'Send' }}
+        </button>
       </div>
       <button @click="reset" class="mt-4 text-sm text-gray-500 bg-gray-200">
-        {{ lang === 'ja' ? 'オーバー':'Over' }}
+        {{ lang === 'ja' ? 'オーバー' : 'Over' }}
       </button>
     </div>
   </div>
@@ -138,7 +148,7 @@ watch(category, () => {
   display: flex;
   flex: 1;
   border-radius: 50px;
-  border: 1px solid #CDD2DB;
+  border: 1px solid #cdd2db;
   background: white;
   align-items: center;
   flex-direction: column;
@@ -148,7 +158,7 @@ watch(category, () => {
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    border-bottom: 1px solid #CDD2DB;
+    border-bottom: 1px solid #cdd2db;
     padding: 20px;
   }
 
