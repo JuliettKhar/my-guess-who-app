@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+import { computed, onBeforeUnmount, ref, watch } from 'vue';
 import CategorySelector from './components/CategorySelector.vue';
 import ChatWindow from './components/ChatWindow.vue';
 import QuickReplies from './components/QuickReplies.vue';
@@ -75,8 +75,12 @@ const reset = () => {
   messages.value = [];
 };
 
-watch(category, () => {
+const stop = watch(category, () => {
   updateBg();
+});
+
+onBeforeUnmount(() => {
+  stop();
 });
 </script>
 
@@ -98,6 +102,13 @@ watch(category, () => {
       </div>
     </div>
     <div v-if="!category" class="guess-app__body">
+      <p class="sm:text-sm text-center text-pink-600 w-max">
+        {{
+          lang === 'ja'
+            ? 'カテゴリーを選んで、誰かを思い浮かべてください！私は当ててみます。'
+            : 'Think of someone from the selected category — I’ll guess who it is!'
+        }}
+      </p>
       <CategorySelector :categories="categoriesByLang" :lang="lang" @select="selectCategory" />
     </div>
     <div
@@ -105,7 +116,7 @@ watch(category, () => {
       class="guess-app__body"
       :style="!category ? 'flex-direction: row' : 'flex-direction: column'"
     >
-      <ChatWindow :messages="messages" :loader="isAnswerLoading" />
+      <ChatWindow :messages="messages" :loader="isAnswerLoading" :lang="lang" />
       <QuickReplies :lang="lang" @reply="quickReply" />
       <div class="flex gap-2">
         <input
@@ -135,6 +146,7 @@ watch(category, () => {
   align-items: center;
   flex-direction: column;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+  opacity: 0.85;
 
   &__header {
     display: flex;
@@ -157,7 +169,9 @@ watch(category, () => {
     flex-direction: column;
     width: 100%;
     justify-content: center;
-    padding: 20px;
+    flex-wrap: wrap;
+    padding-top: 10px;
+    gap: 10px;
 
     @media (min-width: 600px) {
       flex-direction: row;
