@@ -2,8 +2,8 @@
 defineProps({
   categories: Array,
   lang: String
-})
-defineEmits(['select'])
+});
+defineEmits(['select']);
 </script>
 
 <template>
@@ -15,7 +15,7 @@ defineEmits(['select'])
       v-for="(c, index) in categories"
       :key="c"
       @click="$emit('select', index + 1)"
-      class="bg-indigo-500 hover:bg-indigo-600 text-white py-2 rounded-xl font-medium transition-all shadow-md hover:shadow-lg"
+      class="bg-indigo-500 hover:bg-indigo-600 text-white py-2 rounded-xl font-medium shadow-md hover:shadow-lg transform hover:scale-105 transition-transform duration-200"
     >
       <span v-if="index + 1 === 1">🎌 {{ c }}</span>
       <span v-else-if="index + 1 === 2">🧑‍🤝‍🧑️ {{ c }}</span>

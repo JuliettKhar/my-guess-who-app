@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { toRefs } from 'vue'
-import aiImg from '@/assets/ai-image.png'
-import UserImg from '@/assets/user-image.jpeg'
-import robotImg from '@/assets/robot.jpg'
+import { toRefs } from 'vue';
+import aiImg from '@/assets/ai-image.png';
+import UserImg from '@/assets/user-image.jpeg';
+import robotImg from '@/assets/robot.jpg';
 
-const props = defineProps({ messages: Array })
-const { messages } = toRefs(props)
+const props = defineProps({ messages: Array, loader: Boolean });
+const { messages, loader } = toRefs(props);
 </script>
 
 <template>
@@ -22,6 +22,7 @@ const { messages } = toRefs(props)
         <p>{{ msg.content }}</p>
       </div>
     </div>
+    <p v-if="loader" class="text-sm text-gray-500 mt-4 animate-pulse">Thinking...</p>
   </div>
 </template>
 
