@@ -23,3 +23,8 @@ dist-ssr
 *.sln
 *.sw?
 .env
+
+dist/
+*.js
+*.d.ts
+*.tsbuildinfo

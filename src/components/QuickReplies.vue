@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { computed, toRefs } from 'vue'
+import { computed, toRefs } from 'vue';
 
-const props = defineProps({ lang: String })
-defineEmits(['reply'])
+const props = defineProps<{ lang: String }>();
+defineEmits(['reply']);
 
-const { lang } = toRefs(props)
-const yesText = computed(() => (lang.value === 'ja' ? 'はい' : 'Yes'))
-const noText = computed(() => (lang.value === 'ja' ? 'いいえ' : 'No'))
-const unsureText = computed(() => (lang.value === 'ja' ? 'わからない' : "I don't know"))
+const { lang } = toRefs(props);
+const yesText = computed(() => (lang.value === 'ja' ? 'はい' : 'Yes'));
+const noText = computed(() => (lang.value === 'ja' ? 'いいえ' : 'No'));
+const unsureText = computed(() => (lang.value === 'ja' ? 'わからない' : "I don't know"));
 </script>
 
 <template>

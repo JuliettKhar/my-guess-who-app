@@ -3,14 +3,14 @@ import { computed, onBeforeUnmount, ref, watch } from 'vue';
 import CategorySelector from './components/CategorySelector.vue';
 import ChatWindow from './components/ChatWindow.vue';
 import QuickReplies from './components/QuickReplies.vue';
-import type { IMessage } from '@/types.ts';
-import { getBackgroundUrl } from '@/utils/getBackgroundUrl.ts';
-import { systemPrompts } from '@/utils/systemPrompts.ts';
+import type { IMessage } from '@/types';
+import { getBackgroundUrl } from '@/utils/getBackgroundUrl';
+import { systemPrompts } from '@/utils/systemPrompts';
 
 const enCategories: string[] = ['Anime Character', 'Real Person', 'Movie Character'];
 const jpCategories: string[] = ['アニメキャラクター', '実在の人物', '映画のキャラクター'];
-const category = ref('');
-const lang = ref('en');
+const category = ref<number | null>(null);
+const lang = ref<'ja' | 'en'>('en');
 const input = ref('');
 const messages = ref<IMessage[]>([]);
 const isAnswerLoading = ref(false);
@@ -18,7 +18,7 @@ const isAnswerLoading = ref(false);
 const categoriesByLang = computed((): string[] =>
   lang.value === 'en' ? enCategories : jpCategories
 );
-const dynamicBg = computed((): string => getBackgroundUrl(category.value));
+const dynamicBg = computed((): string => getBackgroundUrl(category.value as number));
 
 const updateBg = () =>
   document.documentElement.style.setProperty('--guess-bg-url', `url('${dynamicBg.value}')`);
@@ -70,7 +70,7 @@ const fetchNextQuestion = async () => {
 };
 
 const reset = () => {
-  category.value = '';
+  category.value = null;
   input.value = '';
   messages.value = [];
 };

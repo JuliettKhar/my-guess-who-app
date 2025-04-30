@@ -4,7 +4,11 @@ import aiImg from '@/assets/ai-image.png';
 import UserImg from '@/assets/user-image.jpeg';
 import robotImg from '@/assets/robot.jpg';
 
-const props = defineProps({ messages: Array, loader: Boolean, lang: String });
+const props = defineProps<{
+  messages: { role: string; content: string }[];
+  loader: Boolean;
+  lang: String;
+}>();
 const { messages, loader, lang } = toRefs(props);
 </script>
 

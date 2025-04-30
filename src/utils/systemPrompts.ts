@@ -1,4 +1,4 @@
-import type { ISystemPrompts } from '../types.ts';
+import type { ISystemPrompts } from '@/types';
 
 export const systemPrompts: ISystemPrompts = {
   1: {

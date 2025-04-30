@@ -13,7 +13,7 @@ defineEmits(['select']);
     </p>
     <button
       v-for="(c, index) in categories"
-      :key="c"
+      :key="index"
       @click="$emit('select', index + 1)"
       class="bg-indigo-500 hover:bg-indigo-600 text-white py-2 rounded-xl font-medium shadow-md hover:shadow-lg transform hover:scale-105 transition-transform duration-200"
     >
