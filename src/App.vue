@@ -102,7 +102,7 @@ onBeforeUnmount(() => {
       </div>
     </div>
     <div v-if="!category" class="guess-app__body">
-      <p class="sm:text-sm text-center text-pink-600 w-max">
+      <p class="sm:text-sm text-center text-pink-600">
         {{
           lang === 'ja'
             ? 'カテゴリーを選んで、誰かを思い浮かべてください！私は当ててみます。'
@@ -170,7 +170,7 @@ onBeforeUnmount(() => {
     width: 100%;
     justify-content: center;
     flex-wrap: wrap;
-    padding-top: 10px;
+    padding: 20px;
     gap: 10px;
 
     @media (min-width: 600px) {
