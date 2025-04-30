@@ -1,11 +1,11 @@
 export interface IMessage {
-    role: string;
-    content: string;
+  role: string;
+  content: string;
 }
 
-export interface ISystemPrompts{
-    [key: string]: {
-        ja: string;
-        en: string;
-    }
+export interface ISystemPrompts {
+  [key: number]: {
+    ja: string;
+    en: string;
+  };
 }
