@@ -6,9 +6,7 @@ import { fileURLToPath, URL } from 'node:url';
 // https://vite.dev/config/
 export default defineConfig({
   define: {
-    VITE_API_KEY: JSON.stringify(
-      process.env.NODE_ENV === 'development' ? process.env.VITE_API_KEY : ''
-    )
+    'import.meta.env.VITE_API_KEY': JSON.stringify(process.env.VITE_API_KEY)
   },
   base: '/my-guess-who-app/',
   resolve: {
