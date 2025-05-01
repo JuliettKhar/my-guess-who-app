@@ -28,3 +28,4 @@ dist/
 *.js
 *.d.ts
 *.tsbuildinfo
+.vscode/
