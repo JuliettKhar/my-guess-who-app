@@ -7,9 +7,6 @@ dotenv.config();
 
 // https://vite.dev/config/
 export default defineConfig({
-  define: {
-    'import.meta.env.VITE_API_KEY': JSON.stringify(process.env.VITE_API_KEY)
-  },
   base: '/my-guess-who-app/',
   resolve: {
     alias: {
@@ -20,7 +17,7 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        entryFileNames: 'index.js', // 💡 JS в корень
+        entryFileNames: 'index.js',
         chunkFileNames: 'chunks/[name].js',
         assetFileNames: 'assets/[name].[ext]'
       }

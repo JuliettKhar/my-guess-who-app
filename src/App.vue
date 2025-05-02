@@ -57,7 +57,7 @@ const fetchNextQuestion = async () => {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${isDev ? import.meta.env.VITE_API_KEY : ''}`
+      Authorization: `Bearer ${import.meta.env.VITE_API_KEY}`
     },
     body: JSON.stringify({
       model: 'gpt-4',
