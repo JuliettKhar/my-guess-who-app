@@ -14,7 +14,6 @@ const lang = ref<'ja' | 'en'>('en');
 const input = ref('');
 const messages = ref<IMessage[]>([]);
 const isAnswerLoading = ref(false);
-const isDev = import.meta.env.MODE === 'development';
 
 const categoriesByLang = computed((): string[] =>
   lang.value === 'en' ? enCategories : jpCategories
