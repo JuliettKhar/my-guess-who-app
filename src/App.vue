@@ -14,7 +14,6 @@ const lang = ref<'ja' | 'en'>('en');
 const input = ref('');
 const messages = ref<IMessage[]>([]);
 const isAnswerLoading = ref(false);
-const isDev = import.meta.env.MODE === 'development';
 
 const categoriesByLang = computed((): string[] =>
   lang.value === 'en' ? enCategories : jpCategories
@@ -57,7 +56,7 @@ const fetchNextQuestion = async () => {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${isDev ? import.meta.env.VITE_API_KEY : ''}`
+      Authorization: `Bearer ${import.meta.env.VITE_API_KEY}`
     },
     body: JSON.stringify({
       model: 'gpt-4',
