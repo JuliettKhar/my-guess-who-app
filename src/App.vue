@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, ref, watch } from 'vue';
+import { computed, onBeforeUnmount, ref } from 'vue';
 import CategorySelector from './components/CategorySelector.vue';
 import ChatWindow from './components/ChatWindow.vue';
 import QuickReplies from './components/QuickReplies.vue';
 import type { IMessage } from '@/types';
-import { getBackgroundUrl } from '@/utils/getBackgroundUrl';
 import { systemPrompts } from '@/utils/systemPrompts';
 
 const enCategories: string[] = ['Anime Character', 'Real Person', 'Movie Character'];
@@ -18,10 +17,6 @@ const isAnswerLoading = ref(false);
 const categoriesByLang = computed((): string[] =>
   lang.value === 'en' ? enCategories : jpCategories
 );
-const dynamicBg = computed((): string => getBackgroundUrl(category.value as number));
-
-const updateBg = () =>
-  document.documentElement.style.setProperty('--guess-bg-url', `url('${dynamicBg.value}')`);
 
 const selectCategory = (c: number) => {
   category.value = c;
@@ -51,22 +46,26 @@ const scrollToMessage = () => {
 };
 
 const fetchNextQuestion = async () => {
-  isAnswerLoading.value = true;
-  const res = await fetch('https://api.openai.com/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${import.meta.env.VITE_API_KEY}`
-    },
-    body: JSON.stringify({
-      model: 'gpt-4',
-      messages: messages.value
-    })
-  });
-  const data = await res.json();
-  isAnswerLoading.value = false;
-  messages.value.push({ role: 'assistant', content: data.choices[0].message.content });
-  scrollToMessage();
+  try {
+    isAnswerLoading.value = true;
+    const res = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${import.meta.env.VITE_API_KEY}`
+      },
+      body: JSON.stringify({
+        model: 'gpt-4',
+        messages: messages.value
+      })
+    });
+    const data = await res.json();
+    isAnswerLoading.value = false;
+    messages.value.push({ role: 'assistant', content: data.choices[0].message.content });
+    scrollToMessage();
+  } catch (error) {
+    messages.value.push({ role: 'assistant', content: 'Something went wrong.' });
+  }
 };
 
 const reset = () => {
@@ -74,10 +73,6 @@ const reset = () => {
   input.value = '';
   messages.value = [];
 };
-
-const stop = watch(category, () => {
-  updateBg();
-});
 
 onBeforeUnmount(() => {
   stop();
@@ -140,13 +135,14 @@ onBeforeUnmount(() => {
 .guess-app {
   display: flex;
   flex: 1;
-  border-radius: 50px;
-  border: 1px solid #cdd2db;
   background: white;
   align-items: center;
   flex-direction: column;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
-  opacity: 0.85;
+  backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 22px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+    transition: box-shadow 0.3s ease;
 
   &__header {
     display: flex;

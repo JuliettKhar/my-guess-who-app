@@ -8,7 +8,6 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  --guess-bg-url: url('./assets/general.png');
 }
 
 a {
@@ -27,7 +26,7 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
-  background-color: #FFFCF3;
+  background: linear-gradient(135deg, #f0f4f8 0%, #d9e4f5 50%, #cdd9ed 100%);
 
   &:before {
   content: '';
