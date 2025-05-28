@@ -36,7 +36,7 @@ const getApiKey = () => {
   } else {
     window.alert('Wrong API Key!');
   }
-}
+};
 
 const quickReply = (text: string) => {
   messages.value.push({ role: 'user', content: text });
@@ -45,8 +45,13 @@ const quickReply = (text: string) => {
 };
 
 const sendMessage = () => {
-  if (!input.value.trim()) return;
-  if (!apiKey.value) return;
+  if (!input.value.trim()) {
+    return;
+  };
+  if (!apiKey.value) {
+    window.alert('Wrong API Key!');
+    return;
+  }
 
   messages.value.push({ role: 'user', content: input.value });
   fetchNextQuestion();
@@ -62,37 +67,37 @@ const scrollToMessage = () => {
 };
 
 const fetchNextQuestion = async () => {
-  try {
-    isAnswerLoading.value = true;
-    const res = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${apiKey.value}`,
-      },
-      body: JSON.stringify({
-        model: 'gpt-4',
-        messages: messages.value
-      })
-    });
-    const data = await res.json();
-    isAnswerLoading.value = false;
-    messages.value.push({ role: 'assistant', content: data.choices[0].message.content });
-    scrollToMessage();
-  } catch (error) {
-    messages.value.push({ role: 'assistant', content: 'Something went wrong.' });
-  }
-};
+    try {
+      isAnswerLoading.value = true;
+      const res = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${apiKey.value}`
+        },
+        body: JSON.stringify({
+          model: 'gpt-4',
+          messages: messages.value
+        })
+      });
+      const data = await res.json();
+      isAnswerLoading.value = false;
+      messages.value.push({ role: 'assistant', content: data.choices[0].message.content });
+      scrollToMessage();
+    } catch (error) {
+      messages.value.push({ role: 'assistant', content: 'Something went wrong.' });
+    }
+  };
 
-const reset = () => {
-  category.value = null;
-  input.value = '';
-  messages.value = [];
-};
+  const reset = () => {
+    category.value = null;
+    input.value = '';
+    messages.value = [];
+  };
 
-onBeforeUnmount(() => {
-  stop();
-});
+  onBeforeUnmount(() => {
+    stop();
+  });
 </script>
 
 <template>
@@ -147,7 +152,7 @@ onBeforeUnmount(() => {
     <form class="guess-app__footer" v-if="category" @click.prevent>
       <span class="text-gray-700 dark:text-gray-200">API key:</span>
       <input type="password" v-model.trim="apiKey" />
-      <button @click="getApiKey"> {{ lang === 'ja' ? '送信' : 'Send' }}</button>
+      <button @click="getApiKey">{{ lang === 'ja' ? '送信' : 'Send' }}</button>
     </form>
   </div>
 </template>
