@@ -13,6 +13,7 @@ const lang = ref<'ja' | 'en'>('en');
 const input = ref('');
 const messages = ref<IMessage[]>([]);
 const isAnswerLoading = ref(false);
+const apiKey = ref('');
 
 const categoriesByLang = computed((): string[] =>
   lang.value === 'en' ? enCategories : jpCategories
@@ -21,8 +22,21 @@ const categoriesByLang = computed((): string[] =>
 const selectCategory = (c: number) => {
   category.value = c;
   messages.value = [{ role: 'system', content: systemPrompts[c][lang.value] }];
-  fetchNextQuestion();
 };
+
+const getApiKey = () => {
+  if (sessionStorage.getItem('apiKey')) {
+    apiKey.value = sessionStorage.getItem('apiKey') as string;
+    fetchNextQuestion();
+    return;
+  }
+
+  if (/^sk-[a-zA-Z0-9-_]{10,}$/.test(apiKey.value)) {
+    sessionStorage.setItem('a_key', apiKey.value);
+  } else {
+    window.alert('Wrong API Key!');
+  }
+}
 
 const quickReply = (text: string) => {
   messages.value.push({ role: 'user', content: text });
@@ -32,6 +46,8 @@ const quickReply = (text: string) => {
 
 const sendMessage = () => {
   if (!input.value.trim()) return;
+  if (!apiKey.value) return;
+
   messages.value.push({ role: 'user', content: input.value });
   fetchNextQuestion();
   scrollToMessage();
@@ -52,7 +68,7 @@ const fetchNextQuestion = async () => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${import.meta.env.VITE_API_KEY}`
+        Authorization: `Bearer ${apiKey.value}`,
       },
       body: JSON.stringify({
         model: 'gpt-4',
@@ -80,7 +96,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="guess-app">
+  <div class="guess-app main-container drop-shadow-[0_10px_20px_rgba(0,0,0,0.1)]">
     <div class="guess-app__header" :style="!category ? 'padding-bottom:20px' : 'padding-bottom:0'">
       <h1 class="sm:text-sm md:text-3xl font-bold text-center text-indigo-700">
         {{ lang === 'ja' ? '「だれでしょう？」' : 'Guess Who?' }}
@@ -97,7 +113,7 @@ onBeforeUnmount(() => {
       </div>
     </div>
     <div v-if="!category" class="guess-app__body">
-      <p class="sm:text-sm text-center text-pink-600">
+      <p class="sm:text-sm text-center text-pink-500">
         {{
           lang === 'ja'
             ? 'カテゴリーを選んで、誰かを思い浮かべてください！私は当ててみます。'
@@ -128,6 +144,11 @@ onBeforeUnmount(() => {
         {{ lang === 'ja' ? 'オーバー' : 'Over' }}
       </button>
     </div>
+    <form class="guess-app__footer" v-if="category" @click.prevent>
+      <span class="text-gray-700 dark:text-gray-200">API key:</span>
+      <input type="password" v-model.trim="apiKey" />
+      <button @click="getApiKey"> {{ lang === 'ja' ? '送信' : 'Send' }}</button>
+    </form>
   </div>
 </template>
 
@@ -139,10 +160,10 @@ onBeforeUnmount(() => {
   align-items: center;
   flex-direction: column;
   backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-radius: 22px;
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
-    transition: box-shadow 0.3s ease;
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 22px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+  transition: box-shadow 0.3s ease;
 
   &__header {
     display: flex;
@@ -158,6 +179,12 @@ onBeforeUnmount(() => {
       gap: 10px;
       padding: 20px 20px 0;
     }
+
+    h1 {
+      background: linear-gradient(to right, #a855f7, #f43f5e);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
   }
 
   &__body {
@@ -171,6 +198,22 @@ onBeforeUnmount(() => {
 
     @media (min-width: 600px) {
       flex-direction: row;
+    }
+  }
+
+  &__footer {
+    gap: 5px;
+    padding: 20px;
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    border-top: 1px solid #cdd2db;
+
+    input {
+      border: 1px solid gray;
+      border-radius: 5px;
+      padding: 0 5px;
     }
   }
 }
