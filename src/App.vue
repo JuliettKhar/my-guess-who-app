@@ -150,7 +150,7 @@ const fetchNextQuestion = async () => {
       </button>
     </div>
     <form class="guess-app__footer" v-if="category" @click.prevent>
-      <span class="text-gray-700 dark:text-gray-200">API key:</span>
+      <span class="text-gray-700 dark:text-gray-200 text-sm">API key:</span>
       <input type="password" v-model.trim="apiKey" />
       <button @click="getApiKey">{{ lang === 'ja' ? '送信' : 'Send' }}</button>
     </form>
@@ -219,6 +219,10 @@ const fetchNextQuestion = async () => {
       border: 1px solid gray;
       border-radius: 5px;
       padding: 0 5px;
+    }
+
+    button {
+      padding: 0.6rem;
     }
   }
 }
