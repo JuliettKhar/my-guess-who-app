@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, ref } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import CategorySelector from './components/CategorySelector.vue';
 import ChatWindow from './components/ChatWindow.vue';
 import QuickReplies from './components/QuickReplies.vue';
@@ -33,6 +33,7 @@ const getApiKey = () => {
 
   if (/^sk-[a-zA-Z0-9-_]{10,}$/.test(apiKey.value)) {
     sessionStorage.setItem('a_key', apiKey.value);
+    fetchNextQuestion();
   } else {
     window.alert('Wrong API Key!');
   }
@@ -47,7 +48,7 @@ const quickReply = (text: string) => {
 const sendMessage = () => {
   if (!input.value.trim()) {
     return;
-  };
+  }
   if (!apiKey.value) {
     window.alert('Wrong API Key!');
     return;
@@ -95,8 +96,18 @@ const fetchNextQuestion = async () => {
     messages.value = [];
   };
 
+  onMounted(() => {
+    const url = new URL(document.location.toString());
+    const searchParams = new URLSearchParams(url.search);
+
+    if (searchParams.get('key')) {
+      apiKey.value = searchParams.get('key') as string;
+    }
+  })
+
+
   onBeforeUnmount(() => {
-    stop();
+    reset();
   });
 </script>
 
@@ -161,13 +172,14 @@ const fetchNextQuestion = async () => {
 .guess-app {
   display: flex;
   flex: 1;
-  background: white;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   align-items: center;
   flex-direction: column;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
   border-radius: 22px;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
   transition: box-shadow 0.3s ease;
 
   &__header {
