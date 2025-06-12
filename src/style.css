@@ -38,7 +38,7 @@ body {
         background-size: 80%;
         background-repeat: repeat;
         background-position: 0 0;
-        animation: bgScroll 40s linear infinite;
+        animation: bgScroll 20s linear infinite;
         opacity: 0.3;
 
         @media (max-width: 600px) {
