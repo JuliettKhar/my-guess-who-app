@@ -3,7 +3,7 @@
 
 An interactive “Guess Who?” game built with Vue 3 using the Composition API, Vite, and Tailwind CSS. Supports category selection (Anime, Movie, Real Person), multilingual interface (English / 日本語), dynamic backgrounds, and ChatGPT API integration.
 
-⚠️ This project requires an OpenAI API key to run locally.
+⚠️ You can provide the key either **locally via `.env` file** or **via URL param** in the browser.
 
 ---
 
@@ -29,9 +29,14 @@ npm run dev
 ---
 
 ## ⚙️ OpenAI API Setup
-In .env file:
+Option 1: Local via .env
 ```js
-VITE_API_KEY=OPEN_AI_API_KEY
+VITE_API_KEY=API_KEY
+```
+Option 2: Via URL param (no .env required)
+```
+https://game-domain.com?key=sk-xxxxxxxxxxxxxxxxxxxxxxx
+
 ```
 
 ---
