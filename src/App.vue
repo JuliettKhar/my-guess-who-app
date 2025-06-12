@@ -22,6 +22,7 @@ const categoriesByLang = computed((): string[] =>
 const selectCategory = (c: number) => {
   category.value = c;
   messages.value = [{ role: 'system', content: systemPrompts[c][lang.value] }];
+  fetchNextQuestion();
 };
 
 const getApiKey = () => {
@@ -74,19 +75,26 @@ const fetchNextQuestion = async () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${apiKey.value}`
+          Authorization: `Bearer ${import.meta.env.MODE !== 'production' ? import.meta.env.VITE_API_KEY : apiKey.value}`
         },
         body: JSON.stringify({
           model: 'gpt-4',
           messages: messages.value
         })
       });
+
+      if (!res.ok) {
+        const resp = await res.json();
+        const err = resp.error.message.split('.')[0];
+        throw Error(err ||  'Something went wrong.' );
+      }
+
       const data = await res.json();
       isAnswerLoading.value = false;
       messages.value.push({ role: 'assistant', content: data.choices[0].message.content });
       scrollToMessage();
-    } catch (error) {
-      messages.value.push({ role: 'assistant', content: 'Something went wrong.' });
+    } catch (error: any) {
+      messages.value.push({ role: 'assistant', content: error.message });
     }
   };
 
